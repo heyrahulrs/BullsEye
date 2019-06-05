@@ -10,22 +10,41 @@ import UIKit
 
 class GameViewController: UIViewController {
     
+    //MARK: - Outlets
+    
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var targetValueLabel: UILabel!
     @IBOutlet weak var roundInfoLabel: UILabel!
     @IBOutlet weak var scoreInfoLabel: UILabel!
 
+    //MARK: - Variables
+    
     var sliderValue: Int = 0
-    var targetValue: Int = 0
+    
+    var targetValue: Int = 0 {
+        didSet {
+            targetValueLabel.text = "\(targetValue)"
+        }
+    }
 
-    var score: Int = 0
-    var currentRound: Int = 0
+    var score: Int = 0 {
+        didSet {
+            scoreInfoLabel.text = "Score: \(score)"
+        }
+    }
+    
+    var currentRound: Int = 0 {
+        didSet {
+            roundInfoLabel.text = "Round: \(currentRound)"
+        }
+    }
+    
+    //MARK: - UI Kit Methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         startNewRound()
-        updateLabels()
         
         let thumbImageNormal = #imageLiteral(resourceName: "Slider Thumb Image Normal") //UIImage(named: "Slider Thumb Image Normal")
         let thumbImageHighlighted = #imageLiteral(resourceName: "Slider Thumb Image Highlighted") //UIImage(named: "Slider Thumb Image Highlighted")
@@ -41,6 +60,8 @@ class GameViewController: UIViewController {
         slider.setMaximumTrackImage(maximumTrackImage, for: .normal)
 
     }
+    
+    //MARK: - IB Actions
     
     @IBAction func didTapHitMeButton() {
         
@@ -72,38 +93,32 @@ class GameViewController: UIViewController {
         let message = "Your target was \(targetValue), your slider is placed at \(sliderValue). You scored \(points) in this round and your total score is \(score)."
         
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default) { action in
-            self.startNewRound()
-            self.updateLabels()
+        let action = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+            self?.startNewRound()
         }
         
         alert.addAction(action)
         
-        show(alert, sender: nil)
+        present(alert, animated: true)
     }
     
     @IBAction func didTapStartOverButton() {
         currentRound = 0
         score = 0
         startNewRound()
-        updateLabels()
     }
     
     @IBAction func sliderMoved() {
         sliderValue = Int(slider.value)
     }
 
+    //MARK: - Functions
+    
     func startNewRound() {
         sliderValue = 50
         slider.value = 50
         targetValue = Int.random(in: 1...100)
         currentRound += 1
-    }
-    
-    func updateLabels() {
-        targetValueLabel.text = "\(targetValue)"
-        roundInfoLabel.text = "Round: \(currentRound)"
-        scoreInfoLabel.text = "Score: \(score)"
     }
 
 }

@@ -22,7 +22,10 @@ class InitialViewController: UIViewController {
     }
     
     @IBAction func didTapStartGameButton() {
-        performSegue(withIdentifier: "InitialToGame", sender: nil)
+        guard let viewController = storyboard?.instantiateViewController(withIdentifier: "GameViewController") as? GameViewController else {
+            fatalError("Unable to find View Controller named GameViewController")
+        }
+        present(viewController, animated: true)
     }
 
 }
